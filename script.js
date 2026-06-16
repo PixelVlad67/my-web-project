@@ -1,23 +1,8 @@
 console.log("JS connected!");
 
-// === РОБОТА З ДАНИМИ ===
-const myProjects = [
-  { id: 1, title: "Сайт-візитка", tech: "HTML/CSS" },
-  { id: 2, title: "Магазин", tech: "JavaScript" }
-];
-
-console.log(myProjects[0].title);
-
-const list = document.querySelector('#projects-list');
-if (list) {
-  myProjects.forEach(project => {
-    const li = document.createElement('li');
-    li.textContent = project.title + " (" + project.tech + ")";
-    list.appendChild(li);
-  });
-}
-
-// === ПЕРЕМИКАЧ ТЕМИ ===
+// ==========================================
+// 1. ПЕРЕМИКАЧ ТЕМИ
+// ==========================================
 const themeBtn = document.querySelector('#theme-toggle');
 const bodyElement = document.body;
 
@@ -27,12 +12,13 @@ if (themeBtn) {
   });
 }
 
-// === МОДАЛЬНЕ ВІКНО ТА ФОРМА ===
+// ==========================================
+// 2. МОДАЛЬНЕ ВІКНО ТА ФОРМА
+// ==========================================
 const openBtn = document.querySelector('#open-modal');
 const closeBtn = document.querySelector('#close-modal');
 const modal = document.querySelector('#modal');
 
-// Відкриття та закриття по кліку
 if (openBtn && closeBtn && modal) {
   openBtn.addEventListener('click', () => {
     modal.classList.add('is-open');
@@ -43,25 +29,70 @@ if (openBtn && closeBtn && modal) {
   });
 }
 
-// Закриття по клавіші Escape
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') {
     modal.classList.remove('is-open');
   }
 });
 
-// Валідація форми
 const form = document.querySelector('#contact-form');
 const nameInput = document.querySelector('#user-name');
 
 if (form && nameInput) {
   form.addEventListener('submit', (event) => {
-    event.preventDefault(); // Зупиняє перезавантаження сторінки
+    event.preventDefault(); 
 
     if (nameInput.value.trim().length < 2) {
       alert("Ім'я має містити щонайменше 2 символи");
     } else {
       alert("Форму відправлено!");
     }
+  });
+}
+
+// ==========================================
+// 3. ДИНАМІЧНИЙ РЕНДЕРИНГ ТА ПОШУК (НОВЕ)
+// ==========================================
+const projects = [
+  { id: 1, title: "Сайт-візитка", tech: "HTML/CSS" },
+  { id: 2, title: "Todo App", tech: "JavaScript" },
+  { id: 3, title: "Портфоліо", tech: "HTML/CSS/JS" }
+];
+
+const container = document.querySelector('#projects-container');
+const searchInput = document.querySelector('#search-input');
+
+function createProjectCard(project) {
+  return `
+    <div class="project-card">
+      <h3>${project.title}</h3>
+      <p><strong>Технології:</strong> ${project.tech}</p>
+    </div>
+  `;
+}
+
+function renderProjects(list) {
+  if (!container) return;
+
+  const html = list
+    .map(project => createProjectCard(project))
+    .join('');
+
+  container.innerHTML = html;
+}
+
+// Початковий рендеринг усіх проєктів
+renderProjects(projects);
+
+// Логіка живого пошуку
+if (searchInput) {
+  searchInput.addEventListener('input', () => {
+    const value = searchInput.value.toLowerCase();
+
+    const filtered = projects.filter(project =>
+      project.title.toLowerCase().includes(value)
+    );
+
+    renderProjects(filtered);
   });
 }
