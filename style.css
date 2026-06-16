@@ -1,25 +1,52 @@
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-main {
-  padding: 0 15px;
-}
+/* Базові налаштування та змінні */
 :root {
   --primary-color: #2563eb;
   --text-color: #1e293b;
   --bg-color: #f8fafc;
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
-  font-family: sans-serif;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Типографіка */
+h1, h2, h3 {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.2;
 }
 
 h1 {
   color: var(--primary-color);
+  font-size: clamp(1.8rem, 4vw, 3rem);
 }
+
+/* Структура та доступність */
+main {
+  max-width: 70ch;
+  margin: 0 auto;
+  padding: 0 15px; 
+}
+
+a:focus,
+button:focus {
+  outline: 3px solid #000;
+  outline-offset: 2px;
+}
+
+/* Навігація */
 nav ul {
   display: flex;
   flex-direction: column;
@@ -27,6 +54,7 @@ nav ul {
   list-style: none;
   padding: 0;
 }
+
 @media (min-width: 768px) {
   header {
     display: flex;
@@ -38,55 +66,40 @@ nav ul {
     flex-direction: row;
   }
 }
+
+/* Сітка проєктів */
 .projects-container {
   display: grid;
-  /* auto-fit автоматично переносить картки, якщо вони не поміщаються */
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
 } 
+
 .project-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  /* Додайте сюди інші стилі вашої картки: фон, рамку, відступи тощо */
 }
 
 .project-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
+
+/* Модальне вікно та теми */
+.dark-theme {
+  background-color: #111;
+  color: #fff;
+}
+
+.modal {
+  display: none;
+}
+
+.modal.is-open {
+  display: block;
+}
+
+/* Великі екрани */
 @media (min-width: 1200px) {
   main {
     max-width: 1100px;
-    margin: 0 auto; /* Центрує контент по горизонталі */
   }
-}
-html {
-  font-size: 16px;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  font-size: 1rem;
-  line-height: 1.6;
-  margin: 0;
-}
-
-h1, h2, h3 {
-  font-family: 'Poppins', sans-serif;
-  line-height: 1.2;
-}
-
-h1 {
-  /* Розмір шрифту буде мінімум 1.8rem, максимум 3rem, і плавно змінюватиметься */
-  font-size: clamp(1.8rem, 4vw, 3rem);
-}
-a:focus,
-button:focus {
-  outline: 3px solid #000;
-  outline-offset: 2px;
-}
-main {
-  /* 70ch дорівнює ширині приблизно 70 символів шрифту */
-  max-width: 70ch;
-  margin: 0 auto;
-  padding: 0 1rem;
 }
