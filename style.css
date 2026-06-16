@@ -59,3 +59,34 @@ nav ul {
     margin: 0 auto; /* Центрує контент по горизонталі */
   }
 }
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+h1, h2, h3 {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.2;
+}
+
+h1 {
+  /* Розмір шрифту буде мінімум 1.8rem, максимум 3rem, і плавно змінюватиметься */
+  font-size: clamp(1.8rem, 4vw, 3rem);
+}
+a:focus,
+button:focus {
+  outline: 3px solid #000;
+  outline-offset: 2px;
+}
+main {
+  /* 70ch дорівнює ширині приблизно 70 символів шрифту */
+  max-width: 70ch;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
