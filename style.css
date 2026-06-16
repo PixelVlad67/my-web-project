@@ -1,3 +1,10 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+main {
+  padding: 0 15px;
+}
 :root {
   --primary-color: #2563eb;
   --text-color: #1e293b;
@@ -12,4 +19,43 @@ body {
 
 h1 {
   color: var(--primary-color);
+}
+nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+}
+@media (min-width: 768px) {
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  nav ul {
+    flex-direction: row;
+  }
+}
+.projects-container {
+  display: grid;
+  /* auto-fit автоматично переносить картки, якщо вони не поміщаються */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+} 
+.project-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* Додайте сюди інші стилі вашої картки: фон, рамку, відступи тощо */
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+@media (min-width: 1200px) {
+  main {
+    max-width: 1100px;
+    margin: 0 auto; /* Центрує контент по горизонталі */
+  }
 }
