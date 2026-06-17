@@ -51,85 +51,70 @@ if (form && nameInput) {
 }
 
 // ==========================================
-// 3. ДИНАМІЧНИЙ РЕНДЕРИНГ ТА ПОШУК (НОВЕ)
+// 3. ФІНАЛЬНИЙ МІНІ-ЗАСТОСУНОК (API + РЕНДЕР + ПОШУК)
 // ==========================================
-const projects = [
-  { id: 1, title: "Сайт-візитка", tech: "HTML/CSS" },
-  { id: 2, title: "Todo App", tech: "JavaScript" },
-  { id: 3, title: "Портфоліо", tech: "HTML/CSS/JS" }
-];
-
-const container = document.querySelector('#projects-container');
+let allPosts = []; // Змінна для зберігання всіх завантажених постів з сервера
+const container = document.querySelector('#posts-container');
 const searchInput = document.querySelector('#search-input');
 
-function createProjectCard(project) {
-  return `
-    <div class="project-card">
-      <h3>${project.title}</h3>
-      <p><strong>Технології:</strong> ${project.tech}</p>
-    </div>
-  `;
-}
-
-function renderProjects(list) {
-  if (!container) return;
-
-  const html = list
-    .map(project => createProjectCard(project))
-    .join('');
-
-  container.innerHTML = html;
-}
-
-// Початковий рендеринг усіх проєктів
-renderProjects(projects);
-
-// Логіка живого пошуку
-if (searchInput) {
-  searchInput.addEventListener('input', () => {
-    const value = searchInput.value.toLowerCase();
-
-    const filtered = projects.filter(project =>
-      project.title.toLowerCase().includes(value)
-    );
-
-    renderProjects(filtered);
-  });
-}
-
+// Функція завантаження постів з API
 async function loadPosts() {
   const loading = document.querySelector('#loading');
-  const container = document.querySelector('#posts-container');
-
-  if (!loading || !container) return;
+  if (!loading) return;
 
   try {
     const response = await fetch('https://jsonplaceholder.typicode.com/posts');
 
     if (!response.ok) {
-      throw new Error('Server error');
+      throw new Error('Помилка сервера');
     }
 
     const data = await response.json();
+    
+    // Зберігаємо перші 10 постів
+    allPosts = data.slice(0, 10);
 
-    const html = data.slice(0, 5)
-      .map(post => `
-        <div class="post">
-          <h3>${post.title}</h3>
-          <p>${post.body}</p>
-        </div>
-      `)
-      .join('');
+    // Малюємо їх на екрані
+    renderPosts(allPosts);
 
-    container.innerHTML = html;
-
+    // Ховаємо напис "Завантаження..."
     loading.style.display = 'none';
 
   } catch (error) {
-    console.error("Деталі помилки:", error);
-    loading.textContent = 'Помилка завантаження даних ❌';
+    console.error(error);
+    loading.textContent = 'Помилка завантаження';
     loading.style.color = 'red';
   }
 }
 
+// Функція відображення карток
+function renderPosts(list) {
+  if (!container) return;
+
+  const html = list
+    .map(post => `
+      <div class="post">
+        <h3>${post.title}</h3>
+        <p>${post.body}</p>
+      </div>
+    `)
+    .join('');
+
+  container.innerHTML = html;
+}
+
+// Обробник пошуку (фільтрує отримані з API пости)
+if (searchInput) {
+  searchInput.addEventListener('input', () => {
+    const value = searchInput.value.toLowerCase();
+
+    const filtered = allPosts.filter(post =>
+      post.title.toLowerCase().includes(value)
+    );
+
+    renderPosts(filtered);
+  });
+}
+
+// Запуск програми
 loadPosts();
