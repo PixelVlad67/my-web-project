@@ -1,8 +1,5 @@
 console.log("JS connected!");
 
-// ==========================================
-// 1. ПЕРЕМИКАЧ ТЕМИ
-// ==========================================
 const themeBtn = document.querySelector('#theme-toggle');
 const bodyElement = document.body;
 
@@ -12,9 +9,6 @@ if (themeBtn) {
   });
 }
 
-// ==========================================
-// 2. МОДАЛЬНЕ ВІКНО ТА ФОРМА
-// ==========================================
 const openBtn = document.querySelector('#open-modal');
 const closeBtn = document.querySelector('#close-modal');
 const modal = document.querySelector('#modal');
@@ -50,14 +44,10 @@ if (form && nameInput) {
   });
 }
 
-// ==========================================
-// 3. ФІНАЛЬНИЙ МІНІ-ЗАСТОСУНОК (API + РЕНДЕР + ПОШУК)
-// ==========================================
 let allPosts = []; // Змінна для зберігання всіх завантажених постів з сервера
 const container = document.querySelector('#posts-container');
 const searchInput = document.querySelector('#search-input');
 
-// Функція завантаження постів з API
 async function loadPosts() {
   const loading = document.querySelector('#loading');
   if (!loading) return;
@@ -71,13 +61,10 @@ async function loadPosts() {
 
     const data = await response.json();
     
-    // Зберігаємо перші 10 постів
     allPosts = data.slice(0, 10);
 
-    // Малюємо їх на екрані
     renderPosts(allPosts);
 
-    // Ховаємо напис "Завантаження..."
     loading.style.display = 'none';
 
   } catch (error) {
@@ -87,7 +74,6 @@ async function loadPosts() {
   }
 }
 
-// Функція відображення карток
 function renderPosts(list) {
   if (!container) return;
 
@@ -103,7 +89,6 @@ function renderPosts(list) {
   container.innerHTML = html;
 }
 
-// Обробник пошуку (фільтрує отримані з API пости)
 if (searchInput) {
   searchInput.addEventListener('input', () => {
     const value = searchInput.value.toLowerCase();
@@ -116,5 +101,65 @@ if (searchInput) {
   });
 }
 
-// Запуск програми
 loadPosts();
+
+let tasks = [];
+
+function saveTasks() {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+function loadTasks() {
+  const data = localStorage.getItem('tasks');
+  if (data) {
+    tasks = JSON.parse(data);
+  }
+}
+
+const taskInput = document.querySelector('#task-input');
+const addBtn = document.querySelector('#add-task');
+const taskList = document.querySelector('#task-list');
+
+function renderTasks() {
+  if (!taskList) return;
+  taskList.innerHTML = '';
+  tasks.forEach((task, index) => {
+    const li = document.createElement('li');
+    li.textContent = task.text;
+
+    const btn = document.createElement('button');
+    btn.textContent = 'X';
+
+    btn.addEventListener('click', () => {
+      tasks.splice(index, 1); 
+      saveTasks();            
+      renderTasks();          
+    });
+
+    li.appendChild(btn);
+    taskList.appendChild(li);
+  });
+}
+
+
+if (addBtn && taskInput) {
+  addBtn.addEventListener('click', () => {
+    const value = taskInput.value.trim();
+
+    if (value === '') return;
+
+    tasks.push({ text: value }); 
+    saveTasks();                
+    renderTasks();              
+    taskInput.value = '';        
+  });
+
+  taskInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      addBtn.click();
+    }
+  });
+}
+
+loadTasks();
+renderTasks();
